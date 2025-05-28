@@ -16,7 +16,7 @@ const getAll = async (req, res) => {
   try {
     const categories = await Region.findAll({
       include: [{ model: District, attributes: ["name"] }],
-      attributes: ["name"],
+      attributes: ["id", "name"],
     });
     res.status(200).send(categories);
   } catch (error) {

@@ -1,5 +1,6 @@
 const sequelize = require("../config/db");
 const { DataTypes } = require("sequelize");
+const Machine = require("./machine.models");
 
 const Image = sequelize.define(
   "image",
@@ -21,5 +22,8 @@ const Image = sequelize.define(
     timestamps: false,
   }
 );
+
+Machine.hasMany(Image);
+Image.belongsTo(Machine);
 
 module.exports = Image;

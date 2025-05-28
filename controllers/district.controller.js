@@ -74,4 +74,5 @@ const update = async (req, res) => {
   }
 };
 
+
 module.exports = { add, getAll, getById, remove, update };

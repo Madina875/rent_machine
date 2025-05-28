@@ -16,7 +16,7 @@ const Machine = sequelize.define(
       type: DataTypes.STRING(50),
     },
     price_per_hour: {
-      type: DataTypes.DECIMAL(15, 2),
+      type: DataTypes.DECIMAL,
     },
     description: {
       type: DataTypes.STRING(100),

@@ -34,7 +34,7 @@ const getAll = async (req, res) => {
   try {
     const categories = await Users.findAll({
       include: [{ model: Users_location, attributes: ["name", "address"] }],
-      attributes: ["full_name", "phone"],
+      attributes: ["id", "full_name", "phone"],
     });
     res.status(200).send(categories);
   } catch (error) {

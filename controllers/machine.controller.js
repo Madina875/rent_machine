@@ -3,6 +3,7 @@ const Category = require("../models/category.model");
 const Machine = require("../models/machine.models");
 const Region = require("../models/region.model");
 const Users = require("../models/users.model");
+const Image = require("../models/image.models");
 
 const add = async (req, res) => {
   try {

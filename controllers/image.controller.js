@@ -21,12 +21,7 @@ const getAll = async (req, res) => {
           model: Machine,
           attributes: [
             "name",
-            "price_per_hour",
-            "description",
-            "is_available",
-            "created_at",
-            "min_hour",
-            "min_price",
+            "price_per_hour"
           ],
         },
       ],
