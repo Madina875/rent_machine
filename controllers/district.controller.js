@@ -7,7 +7,7 @@ const add = async (req, res) => {
     const newDistrict = await District.create({ name });
     res.status(201).send({ message: "New district created!", newDistrict });
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 
@@ -16,7 +16,7 @@ const getAll = async (req, res) => {
     const categories = await District.findAll();
     res.status(200).send(categories);
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 
@@ -26,7 +26,7 @@ const getById = async (req, res) => {
     const categories = await District.findByPk(id);
     res.status(200).send(categories);
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 
@@ -36,7 +36,7 @@ const remove = async (req, res) => {
     const categories = await District.destroy({ where: { id } });
     res.status(200).send(categories);
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 
@@ -51,7 +51,7 @@ const update = async (req, res) => {
     );
     res.status(200).send(categories);
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 

@@ -1,5 +1,5 @@
 const { sendErrorResponse } = require("../helpers/send_error_response");
-const Image = require("../models/image.model");
+const Image = require("../models/image.models");
 
 const add = async (req, res) => {
   try {
@@ -7,7 +7,7 @@ const add = async (req, res) => {
     const newImage = await Image.create({ image_url, uploaded_at, machine_id });
     res.status(201).send({ message: "New image created!", newImage });
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 
@@ -16,7 +16,7 @@ const getAll = async (req, res) => {
     const categories = await Image.findAll();
     res.status(200).send(categories);
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 
@@ -26,7 +26,7 @@ const getById = async (req, res) => {
     const categories = await Image.findByPk(id);
     res.status(200).send(categories);
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 
@@ -36,7 +36,7 @@ const remove = async (req, res) => {
     const categories = await Image.destroy({ where: { id } });
     res.status(200).send(categories);
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 
@@ -51,7 +51,7 @@ const update = async (req, res) => {
     );
     res.status(200).send(categories);
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 

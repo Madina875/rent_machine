@@ -7,7 +7,7 @@ const add = async (req, res) => {
     const newCommission = await Commission.create({ percent });
     res.status(201).send({ message: "New commission created!", newCommission });
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 
@@ -16,7 +16,7 @@ const getAll = async (req, res) => {
     const categories = await Commission.findAll();
     res.status(200).send(categories);
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 
@@ -26,7 +26,7 @@ const getById = async (req, res) => {
     const categories = await Commission.findByPk(id);
     res.status(200).send(categories);
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 
@@ -36,7 +36,7 @@ const remove = async (req, res) => {
     const categories = await Commission.destroy({ where: { id } });
     res.status(200).send(categories);
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 
@@ -51,7 +51,7 @@ const update = async (req, res) => {
     );
     res.status(200).send(categories);
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 

@@ -1,11 +1,29 @@
 const { sendErrorResponse } = require("../helpers/send_error_response");
-const Category = require("../models/category.model");
+const Users = require("../models/users.model");
+const bcrypt = require("bcrypt");
 
 const add = async (req, res) => {
   try {
-    const { name } = req.body;
-    const newCategory = await Category.create({ name });
-    res.status(201).send({ message: "New category created!", newCategory });
+    const { full_name, phone, email, password, confirm_password } = req.body;
+    const candidate = await Users.findOne({ where: { email } });
+    if (candidate) {
+      return sendErrorResponse(
+        { message: "Bunday foydalanuvchi mavjud" },
+        res,
+        400
+      );
+    }
+    if (password != confirm_password) {
+      return sendErrorResponse({ message: "parollar mos emas" }, res, 400);
+    }
+    const hashed_password = await bcrypt.hash(password, 7);
+    const newUsers = await Users.create({
+      full_name,
+      phone,
+      email,
+      hashed_password,
+    });
+    res.status(201).send({ message: "New users created!", newUsers });
   } catch (error) {
     sendErrorResponse(error, res, 400);
   }
@@ -13,7 +31,7 @@ const add = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const categories = await Category.findAll();
+    const categories = await Users.findAll();
     res.status(200).send(categories);
   } catch (error) {
     sendErrorResponse(error, res, 400);
@@ -23,7 +41,7 @@ const getAll = async (req, res) => {
 const getById = async (req, res) => {
   try {
     let { id } = req.params;
-    const categories = await Category.findByPk(id);
+    const categories = await Users.findByPk(id);
     res.status(200).send(categories);
   } catch (error) {
     sendErrorResponse(error, res, 400);
@@ -33,7 +51,7 @@ const getById = async (req, res) => {
 const remove = async (req, res) => {
   try {
     let { id } = req.params;
-    const categories = await Category.destroy({ where: { id } });
+    const categories = await Users.destroy({ where: { id } });
     res.status(200).send(categories);
   } catch (error) {
     sendErrorResponse(error, res, 400);
@@ -42,7 +60,7 @@ const remove = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const categories = await Category.update(
+    const categories = await Users.update(
       { ...req.body },
       {
         where: { id: req.params.id },
