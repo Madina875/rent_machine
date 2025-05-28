@@ -4,7 +4,7 @@ const {
   getById,
   remove,
   update,
-} = require("../controllers/commission.controller");
+} = require("../controllers/machine.controller");
 
 const router = require("express").Router();
 

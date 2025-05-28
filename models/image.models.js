@@ -15,9 +15,6 @@ const Image = sequelize.define(
     uploaded_at: {
       type: DataTypes.STRING(200),
     },
-    machine_id: {
-      type: DataTypes.INTEGER,
-    },
   },
   {
     freezeTableName: true,

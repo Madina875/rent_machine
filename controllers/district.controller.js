@@ -1,10 +1,21 @@
 const { sendErrorResponse } = require("../helpers/send_error_response");
 const District = require("../models/district.model");
+const Region = require("../models/region.model");
 
 const add = async (req, res) => {
   try {
-    const { name } = req.body;
-    const newDistrict = await District.create({ name });
+    const { name, regionId } = req.body;
+
+    const regionifExists = await Region.findByPk(regionId);
+
+    if (!regionifExists) {
+      return sendErrorResponse(
+        { message: "Bunday region mavjud emas" },
+        res,
+        400
+      );
+    }
+    const newDistrict = await District.create({ name, regionId });
     res.status(201).send({ message: "New district created!", newDistrict });
   } catch (error) {
     sendErrorResponse(error, res, 400);
@@ -13,7 +24,15 @@ const add = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const categories = await District.findAll();
+    const categories = await District.findAll({
+      include: [
+        {
+          model: Region,
+          attributes: ["name"],
+        },
+      ],
+      attributes: ["id", "name"],
+    });
     res.status(200).send(categories);
   } catch (error) {
     sendErrorResponse(error, res, 400);

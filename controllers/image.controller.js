@@ -1,10 +1,12 @@
 const { sendErrorResponse } = require("../helpers/send_error_response");
 const Image = require("../models/image.models");
+const Machine = require("../models/machine.models");
 
 const add = async (req, res) => {
   try {
-    const { image_url, uploaded_at, machine_id } = req.body;
-    const newImage = await Image.create({ image_url, uploaded_at, machine_id });
+    const { image_url, uploaded_at, machineId } = req.body;
+
+    const newImage = await Image.create({ image_url, uploaded_at, machineId });
     res.status(201).send({ message: "New image created!", newImage });
   } catch (error) {
     sendErrorResponse(error, res, 400);
@@ -13,7 +15,23 @@ const add = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const categories = await Image.findAll();
+    const categories = await Image.findAll({
+      include: [
+        {
+          model: Machine,
+          attributes: [
+            "name",
+            "price_per_hour",
+            "description",
+            "is_available",
+            "created_at",
+            "min_hour",
+            "min_price",
+          ],
+        },
+      ],
+      attributes: ["id", "image_url", "uploaded_at"],
+    });
     res.status(200).send(categories);
   } catch (error) {
     sendErrorResponse(error, res, 400);

@@ -23,8 +23,11 @@ const getAll = async (req, res) => {
 const getById = async (req, res) => {
   try {
     let { id } = req.params;
-    const categories = await Category.findByPk(id);
-    res.status(200).send(categories);
+    const category = await Category.findByPk(id);
+    if (!category) {
+      return res.status(404).send({ message: "Category not found" });
+    }
+    res.status(200).send(category);
   } catch (error) {
     sendErrorResponse(error, res, 400);
   }
@@ -33,8 +36,12 @@ const getById = async (req, res) => {
 const remove = async (req, res) => {
   try {
     let { id } = req.params;
-    const categories = await Category.destroy({ where: { id } });
-    res.status(200).send(categories);
+    const category = await Category.findByPk(id);
+    if (!category) {
+      return res.status(404).send({ message: "Category not found" });
+    }
+    await Category.destroy({ where: { id } });
+    res.status(200).send({ message: "Category successfully deleted" });
   } catch (error) {
     sendErrorResponse(error, res, 400);
   }
@@ -42,14 +49,36 @@ const remove = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const categories = await Category.update(
-      { ...req.body },
+    const { name } = req.body;
+
+    // Validate input
+    if (!name) {
+      return res.status(400).send({ message: "Category name is required" });
+    }
+
+    if (name.length > 50) {
+      return res
+        .status(400)
+        .send({ message: "Category name must be 50 characters or less" });
+    }
+
+    const [updatedRows] = await Category.update(
+      { name },
       {
         where: { id: req.params.id },
         returning: true,
       }
     );
-    res.status(200).send(categories);
+
+    if (updatedRows === 0) {
+      return res.status(404).send({ message: "Category not found" });
+    }
+
+    const updatedCategory = await Category.findByPk(req.params.id);
+    res.status(200).send({
+      message: "Category successfully updated",
+      category: updatedCategory,
+    });
   } catch (error) {
     sendErrorResponse(error, res, 400);
   }
