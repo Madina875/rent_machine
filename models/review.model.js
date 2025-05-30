@@ -1,5 +1,7 @@
 const sequelize = require("../config/db");
 const { DataTypes } = require("sequelize");
+const Users = require("./users.model");
+const Machine = require("./machine.models");
 
 const Review = sequelize.define(
   "review",
@@ -24,5 +26,11 @@ const Review = sequelize.define(
     timestamps: false,
   }
 );
+
+Users.hasMany(Review);
+Review.belongsTo(Users);
+
+Machine.hasMany(Review);
+Review.belongsTo(Machine);
 
 module.exports = Review;

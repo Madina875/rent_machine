@@ -3,10 +3,24 @@ const Contract = require("../models/contract.model");
 
 const add = async (req, res) => {
   try {
-    const { total_price, date, start_time, end_time, total_time } = req.body;
+    const {
+      total_price,
+      date,
+      machineId,
+      userId,
+      statusId,
+      commissionId,
+      start_time,
+      end_time,
+      total_time,
+    } = req.body;
     const newContract = await Contract.create({
       total_price,
       date,
+      machineId,
+      userId,
+      statusId,
+      commissionId,
       start_time,
       end_time,
       total_time,

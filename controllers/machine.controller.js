@@ -4,6 +4,8 @@ const Machine = require("../models/machine.models");
 const Region = require("../models/region.model");
 const Users = require("../models/users.model");
 const Image = require("../models/image.models");
+const Review = require("../models/review.model");
+const Contract = require("../models/contract.model");
 
 const add = async (req, res) => {
   try {
@@ -53,7 +55,7 @@ const getAll = async (req, res) => {
         },
         {
           model: Users,
-          attributes: ["full_name", "phone"],
+          attributes: ["id", "full_name", "phone"],
         },
         {
           model: Region,
@@ -62,6 +64,22 @@ const getAll = async (req, res) => {
         {
           model: Image,
           attributes: ["image_url", "uploaded_at"],
+        },
+        {
+          model: Review,
+          attributes: ["rating", "comment", "created_at"],
+        },
+        {
+          model: Contract,
+          attributes: [
+            "id",
+            "total_price",
+            "date",
+            "userId",
+            "start_time",
+            "end_time",
+            "total_time",
+          ],
         },
       ],
       attributes: [

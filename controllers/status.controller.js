@@ -1,4 +1,5 @@
 const { sendErrorResponse } = require("../helpers/send_error_response");
+const Contract = require("../models/contract.model");
 const Status = require("../models/status.model");
 
 const add = async (req, res) => {
@@ -13,7 +14,15 @@ const add = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const categories = await Status.findAll();
+    const categories = await Status.findAll({
+      include: [
+        {
+          model: Contract,
+          attributes: ["total_price", "date", "machineId", "total_time"],
+        },
+      ],
+      attributes: ["id", "name"],
+    });
     res.status(200).send(categories);
   } catch (error) {
     sendErrorResponse(error, res, 400);

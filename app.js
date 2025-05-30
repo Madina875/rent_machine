@@ -9,7 +9,8 @@ const indexRouter = require("./routes/index.routes");
 const app = express();
 
 app.use(express.json());
-app.use(cookieParser());
+
+app.use(cookieParser()); //
 
 app.use("/api", indexRouter);
 
@@ -25,3 +26,10 @@ async function start() {
   }
 }
 start();
+
+/*
+🔹 What is a Cookie Parser?
+A cookie parser is middleware (e.g., cookie-parser in Express)
+that reads cookies from the Cookie header in incoming HTTP requests 
+and parses them into a readable JavaScript object.
+*/

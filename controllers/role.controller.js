@@ -1,11 +1,23 @@
 const { sendErrorResponse } = require("../helpers/send_error_response");
 const Role = require("../models/role.model");
-const User_role = require("../models/user-role.model");
+// const User_role = require("../models/user-role.model");
+const Users = require("../models/users.model");
 
 const add = async (req, res) => {
   try {
     const { name, description } = req.body;
-    const newRole = await Role.create({ name, description });
+
+    const position = await Role.findOne({
+      where: { name: name.toLowerCase() },
+    });
+    if (position) {
+      return sendErrorResponse({ message: "Bunday role mavjud" }, res, 400);
+    }
+
+    const newRole = await Role.create({
+      name: name.toLowerCase(),
+      description,
+    });
     res.status(201).send({ message: "New role created!", newRole });
   } catch (error) {
     sendErrorResponse(error, res, 400);
@@ -15,8 +27,13 @@ const add = async (req, res) => {
 const getAll = async (req, res) => {
   try {
     const roles = await Role.findAll({
-      include: [{ model: User_role, attributes: ["userId"] }],
-      attributes: ["id", "name", "description"],
+      include: [
+        {
+          model: Users,
+          attributes: ["full_name", "email"],
+        },
+      ],
+      attributes: ["id", "name"],
     });
     res.status(200).send(roles);
   } catch (error) {

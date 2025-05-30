@@ -1,5 +1,6 @@
 const { sendErrorResponse } = require("../helpers/send_error_response");
 const Commission = require("../models/commission.model");
+// const Contract = require("../models/contract.model");
 
 const add = async (req, res) => {
   try {
@@ -13,7 +14,18 @@ const add = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const categories = await Commission.findAll();
+    const categories = await Commission
+      .findAll
+      //   {
+      //   include: [
+      //     {
+      //       model: Contract,
+      //       attributes: ["total_price", "date", "machineId", "total_time"],
+      //     },
+      //   ],
+      //   attributes: ["id", "percent"],
+      // }
+      ();
     res.status(200).send(categories);
   } catch (error) {
     sendErrorResponse(error, res, 400);

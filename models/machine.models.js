@@ -49,4 +49,9 @@ Machine.belongsTo(Users);
 Region.hasMany(Machine);
 Machine.belongsTo(Region);
 
+
+
 module.exports = Machine;
+
+
+// promise purefunction inpurefunction

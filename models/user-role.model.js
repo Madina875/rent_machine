@@ -25,8 +25,8 @@ User.belongsToMany(Role, {
 Role.belongsToMany(User, { through: User_role });
 
 User_role.belongsTo(User);
-
-Role.hasMany(User_role);
 User_role.belongsTo(Role);
+
+// Role.hasMany(User_role);
 
 module.exports = User_role;
