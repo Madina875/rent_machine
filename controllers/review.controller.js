@@ -1,14 +1,17 @@
 const { sendErrorResponse } = require("../helpers/send_error_response");
+const Machine = require("../models/machine.models");
 const Review = require("../models/review.model");
 
 const add = async (req, res) => {
   try {
-    const { name, rating, comment, created_at } = req.body;
+    const { name, rating, comment, created_at, machineId, userId } = req.body;
     const newReview = await Review.create({
       name,
       rating,
       comment,
       created_at,
+      machineId,
+      userId,
     });
     res.status(201).send({ message: "New Review created!", newReview });
   } catch (error) {
@@ -18,8 +21,15 @@ const add = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const review = await Review.findAll();
-    res.status(200).send(categories);
+    const review = await Review.findAll({
+      include: [
+        {
+          model: Machine,
+          attributes: ["id", "name", "is_availables"],
+        },
+      ],
+    });
+    res.status(200).send(review);
   } catch (error) {
     sendErrorResponse(error, res, 400);
   }

@@ -8,7 +8,13 @@ const Category = require("../models/category.model");
 const Machine = require("../models/machine.models");
 const Review = require("../models/review.model");
 const Role = require("../models/role.model");
-const { Op } = require("sequelize");
+const District = require("../models/district.model");
+const Region = require("../models/region.model");
+const Image = require("../models/image.models");
+const Status = require("../models/status.model");
+
+const sequelize = require("../config/db");
+const { fn, col, literal, Op, Sequelize } = require("sequelize");
 
 const add = async (req, res) => {
   try {
@@ -46,20 +52,30 @@ const getAll = async (req, res) => {
         {
           model: Contract,
           attributes: [
+            "id",
             "start_time",
             "end_time",
             "total_price",
+            "statusId",
+            "userId",
             "machineId",
             "total_time",
           ],
         },
         {
           model: Machine,
-          attributes: ["name", "price_per_hour", "regionId", "is_available"],
+          attributes: [
+            "id",
+            "name",
+            "price_per_hour",
+            "regionId",
+            "districtId",
+            "is_available",
+          ],
         },
         {
           model: Role,
-          attributes: ["name"],
+          attributes: ["id", "name"],
           through: { attributes: [] },
         },
       ],
@@ -203,7 +219,146 @@ const findUsersByCategory = async (req, res) => {
   }
 };
 
+//HMW  UYGA VAZIFA✅↘️↘️↘️↘️↘️↘️↘️↘️↘️↘️↘️↘️↘️↘️↘️↘️↘️↘️
 
+//----------------------------------1---------------------------------
+
+const findUsersByRegionDistrict = async (req, res) => {
+  try {
+    const { region, district } = req.body;
+
+    if (!region || !district) {
+      return res
+        .status(400)
+        .send({ message: "region and district are required" });
+    }
+
+    const users = await Users.findAll({
+      include: [
+        {
+          model: Machine,
+          required: true,
+          include: [
+            {
+              model: Region,
+              where: { name: region },
+              required: true,
+            },
+            {
+              model: District,
+              where: { name: district },
+              required: true,
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!users || users.length === 0) {
+      return res.status(404).send({
+        message: "No users found with machines in this region and district",
+      });
+    }
+
+    res.status(200).send(users);
+  } catch (error) {
+    console.error("Error:", error);
+    sendErrorResponse(error, res, 400);
+  }
+};
+
+//------------------------------------2-----------------------------------------
+
+const findUsersWithMachinesHavingMoreThan3Images = async (req, res) => {
+  try {
+    const users = await sequelize.query(
+      `
+      SELECT DISTINCT u.*
+      FROM users u
+      JOIN machine m ON m."userId" = u.id
+      JOIN image i ON i."machineId" = m.id
+      GROUP BY u.id, m.id
+      HAVING COUNT(i.id) > 3
+    `,
+      {
+        type: sequelize.QueryTypes.SELECT,
+      }
+    );
+
+    if (!users || users.length === 0) {
+      return res.status(404).send({ message: "No users found" });
+    }
+
+    res.status(200).send(users);
+  } catch (error) {
+    console.error("Error:", error);
+    sendErrorResponse(error, res, 400);
+  }
+};
+
+// const findUsersWithMachinesHavingMoreThan3Images = async (req, res) => {
+//   try {
+//     const users = await Users.findAll({
+//       include: [
+//         {
+//           model: Machine,
+//           required: true,
+//           include: [
+//             {
+//               model: Image,
+//               attributes: [],
+//             },
+//           ],
+//           attributes: {
+//             include: [[fn("COUNT", col("machine->image.id")), "imageCount"]],
+//           },
+//         },
+//       ],
+//       group: ["users.id", "machine.id"],
+//       having: Sequelize.literal(`COUNT(image.id) > 3`),
+//     });
+
+//     if (!users || users.length === 0) {
+//       return res.status(404).send({ message: "No users found" });
+//     }
+
+//     res.status(200).send(users);
+//   } catch (error) {
+//     console.error("Error:", error);
+//     sendErrorResponse(error, res, 400);
+//   }
+// };
+
+//------------------------------3--------------------------------------
+
+const findUsersStatus = async (req, res) => {
+  try {
+    const users = await Users.findAll({
+      include: [
+        {
+          model: Contract,
+          required: true,
+          include: [
+            {
+              model: Status,
+              where: { name: "cancelled" },
+              required: true,
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!users || users.length === 0) {
+      return res.status(404).send({ message: "No status found" });
+    }
+
+    res.status(200).send(users);
+  } catch (error) {
+    console.error("Error:", error);
+    sendErrorResponse(error, res, 400);
+  }
+};
 
 module.exports = {
   add,
@@ -214,4 +369,9 @@ module.exports = {
   findUsersMachineByTime,
   findUsersByName,
   findUsersByCategory,
+  findUsersByRegionDistrict,
+  findUsersWithMachinesHavingMoreThan3Images,
+  findUsersStatus,
 };
+
+//stackoverflow

@@ -2,6 +2,7 @@ const sequelize = require("../config/db");
 const { DataTypes } = require("sequelize");
 const Users = require("./users.model");
 const Machine = require("./machine.models");
+const Status = require("./status.model");
 
 const Contract = sequelize.define(
   "contract",
@@ -38,5 +39,8 @@ Contract.belongsTo(Users);
 
 Machine.hasMany(Contract);
 Contract.belongsTo(Machine);
+
+Status.hasMany(Contract);
+Contract.belongsTo(Status);
 
 module.exports = Contract;

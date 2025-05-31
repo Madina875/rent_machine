@@ -3,6 +3,7 @@ const { DataTypes } = require("sequelize");
 const Category = require("./category.model");
 const Users = require("./users.model");
 const Region = require("./region.model");
+const District = require("./district.model");
 
 const Machine = sequelize.define(
   "machine",
@@ -49,9 +50,17 @@ Machine.belongsTo(Users);
 Region.hasMany(Machine);
 Machine.belongsTo(Region);
 
-
+District.hasMany(Machine);
+Machine.belongsTo(District);
 
 module.exports = Machine;
 
-
 // promise purefunction inpurefunction
+// primitiv noprimitiv datatypes
+// workerlar va cluster
+// type script generic type lar nima
+// databases
+// agregat funksiyalar
+//interseptor
+// deploy qilish konteynerlash
+//firewall nima

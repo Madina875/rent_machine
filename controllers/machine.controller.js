@@ -6,6 +6,7 @@ const Users = require("../models/users.model");
 const Image = require("../models/image.models");
 const Review = require("../models/review.model");
 const Contract = require("../models/contract.model");
+const District = require("../models/district.model");
 
 const add = async (req, res) => {
   try {
@@ -15,11 +16,12 @@ const add = async (req, res) => {
       description,
       is_available,
       created_at,
-      min_hour,
-      min_price,
       categoryId,
       userId,
       regionId,
+      districtId,
+      min_hour,
+      min_price,
     } = req.body;
 
     const IfExists = await Category.findByPk(categoryId);
@@ -33,11 +35,12 @@ const add = async (req, res) => {
       description,
       is_available,
       created_at,
-      min_hour,
-      min_price,
       categoryId,
       userId,
       regionId,
+      districtId,
+      min_hour,
+      min_price,
     });
     res.status(201).send({ message: "New machine created!", newMachine });
   } catch (error) {
@@ -62,6 +65,10 @@ const getAll = async (req, res) => {
           attributes: ["name"],
         },
         {
+          model: District,
+          attributes: ["name"],
+        },
+        {
           model: Image,
           attributes: ["image_url", "uploaded_at"],
         },
@@ -76,6 +83,7 @@ const getAll = async (req, res) => {
             "total_price",
             "date",
             "userId",
+            "statusId",
             "start_time",
             "end_time",
             "total_time",

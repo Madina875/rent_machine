@@ -1,7 +1,7 @@
 const config = require("config");
 const { Sequelize } = require("sequelize");
 
-module.exports = new Sequelize(
+const sequelize = new Sequelize(
   config.get("db_name"),
   config.get("db_username"),
   config.get("db_password"),
@@ -12,3 +12,5 @@ module.exports = new Sequelize(
     port: config.get("db_port"),
   }
 );
+
+module.exports = sequelize;
